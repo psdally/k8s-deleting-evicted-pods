@@ -1,0 +1,19 @@
+bases:
+- ./../../base
+
+resources:
+- clusterrole.yaml
+- clusterrolebinding.yaml
+
+generatorOptions:
+ disableNameSuffixHash: true
+
+namespace: local-demo-podmanager-ns
+
+patchesJson6902:
+- path: cmd-patch.yaml
+  target:
+    version: v1
+    kind: CronJob
+    group: batch
+    name: pod-manager-cronjob

@@ -1,0 +1,7 @@
+resources:
+- cronjob.yaml
+- bad-deployment.yaml
+- serviceaccount.yaml
+
+generatorOptions:
+ disableNameSuffixHash: true

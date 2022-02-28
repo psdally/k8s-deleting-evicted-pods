@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bad-deployment
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0%
+      maxUnavailable: 100%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bad-deployment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bad-deployment
+    spec:
+      volumes:
+      - name: logs
+        emptyDir:
+          sizeLimit: 1Mi
+      containers:
+        - name: bad-container
+          image: pod-manager:1.0.0
+          volumeMounts:
+          - mountPath: /logs
+            name: logs
+          command:
+          - bash
+          - -c
+          - |
+            while true;
+            do
+              PODCOUNT=$(kubectl get pods --output json | jq -j '.items | length')
+              if [ $PODCOUNT -lt 10 ]; then
+                echo "Allocating a random log file that exceeds emptyDir sizeLimit..."
+                fallocate -l 2M /logs/mylog.log
+              else
+                echo "Too many Pods present ${PODCOUNT}, waiting to allocate storage to cause Pod eviction to avoid consuming excessive storage..."
+                sleep 60
+              fi
+            done;            

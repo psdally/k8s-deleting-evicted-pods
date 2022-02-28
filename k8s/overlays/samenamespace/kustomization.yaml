@@ -1,0 +1,11 @@
+bases:
+- ./../../base
+
+resources:
+- role.yaml
+- rolebinding.yaml
+
+generatorOptions:
+ disableNameSuffixHash: true
+
+namespace: local-demo-podmanager-ns

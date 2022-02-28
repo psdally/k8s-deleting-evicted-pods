@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pod-manager-cronjob
+spec:
+  schedule: "5 * * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 10
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: pod-manager:1.0.0
+            imagePullPolicy: IfNotPresent
+            command:
+            - /scripts/remove-evicted-pods.sh
+          restartPolicy: Never
+      backoffLimit: 0  
+      parallelism: 1
+      completions: 1

@@ -1,0 +1,3 @@
+- op: replace
+  path: /spec/jobTemplate/spec/template/spec/containers/0/command/0
+  value: "/scripts/remove-evicted-pods-all-ns.sh"
